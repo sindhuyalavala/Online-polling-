@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Page - Online Polling System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .parties {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .party {
+            text-align: center;
+            margin: 1rem;
+        }
+        .party img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .party img.selected {
+            border: 3px solid #4CAF50;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Voting Page</h1>
+    </header>
+    <main>
+        <h2>Cast Your Vote</h2>
+        <form id="votingForm">
+            <label for="aadhar">Aadhar Number:</label>
+            <input type="text" id="aadhar" name="aadhar" readonly><br><br>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" readonly><br><br>
+            <label for="voterId">Voter ID:</label>
+            <input type="text" id="voterId" name="voterId" required><br><br>
+            <h3>Select your preferred party:</h3>
+            <div class="parties">
+                <div class="party">
+                    <img src="party1.jpg" alt="Party A" onclick="selectParty(this, 'Party A')">
+                    <h3>Party A</h3>
+                </div>
+                <div class="party">
+                    <img src="party2.jpg" alt="Party B" onclick="selectParty(this, 'Party B')">
+                    <h3>Party B</h3>
+                </div>
+                <div class="party">
+                    <img src="party3.jpg" alt="Party C" onclick="selectParty(this, 'Party C')">
+                    <h3>Party C</h3>
+                </div>
+            </div>
+            <input type="hidden" id="selectedParty" name="selectedParty">
+            <button type="submit">Vote</button>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const aadhar = localStorage.getItem("userAadhar");
+            const name = localStorage.getItem("userName");
+            
+            if (!aadhar || !name) {
+                alert("Please login first to access the voting page.");
+                window.location.href = "index.html";
+            }
+
+            document.getElementById("aadhar").value = aadhar;
+            document.getElementById("name").value = name;
+        });
+
+        function selectParty(img, partyName) {
+            const parties = document.querySelectorAll('.party img');
+            parties.forEach(party => party.classList.remove('selected'));
+            img.classList.add('selected');
+            document.getElementById('selectedParty').value = partyName;
+        }
+
+        document.getElementById('votingForm').onsubmit = function(e) {
+            e.preventDefault();
+            const selectedParty = document.getElementById('selectedParty').value;
+            if (!selectedParty) {
+                alert("Please select a party before voting.");
+                return;
+            }
+            alert("Your response has been recorded. Redirecting to home page.");
+            localStorage.removeItem("userAadhar");
+            localStorage.removeItem("userName");
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
