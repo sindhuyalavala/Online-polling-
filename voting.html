@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Polling System</title>
+    <title>Voting Page - Online Polling System</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -16,36 +16,6 @@
             color: white;
             padding: 1rem;
             text-align: center;
-        }
-        nav {
-            background-color: #444;
-            padding: 0.5rem;
-        }
-        nav ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
-        nav ul li {
-            margin: 0 1rem;
-        }
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-        }
-        .login-btn {
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            padding: 0.5rem 1rem;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
         }
         main {
             max-width: 800px;
@@ -68,65 +38,93 @@
             height: 100px;
             object-fit: cover;
             border-radius: 50%;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 300px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
             cursor: pointer;
         }
-        .close:hover,
-        .close:focus {
-            color: black;
+        .party img.selected {
+            border: 3px solid #4CAF50;
+        }
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-align: center;
             text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Online Polling System</h1>
+        <h1>Voting Page</h1>
     </header>
-    <nav>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#" id="voteLink">Vote</a></li>
-            <li><a href="#" id="resultsLink">Results</a></li>
-            <li><a href="#">Help</a></li>
-            <li><a href="#" id="loginBtn" class="login-btn">Login</a></li>
-        </ul>
-    </nav>
     <main>
-        <h2>Top Parties Participating in Elections</h2>
-        <div class="parties">
-            <div class="party">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Bharatiya_Janata_Party_logo.svg/1024px-Bharatiya_Janata_Party_logo.svg.png" alt="BJP">
-                <h3>BJP</h3>
+        <h2>Cast Your Vote</h2>
+        <form id="votingForm">
+            <label for="aadhar">Aadhar Number:</label>
+            <input type="text" id="aadhar" name="aadhar" readonly><br><br>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" readonly><br><br>
+            <label for="voterId">Voter ID:</label>
+            <input type="text" id="voterId" name="voterId" required><br><br>
+            <h3>Select your preferred party:</h3>
+            <div class="parties">
+                <div class="party">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Bharatiya_Janata_Party_logo.svg/1024px-Bharatiya_Janata_Party_logo.svg.png" alt="Party A" onclick="selectParty(this, 'Party A')">
+                    <h3>BJP A</h3>
+                </div>
+                <div class="party">
+                    <img src="https://th.bing.com/th/id/OIP.pKQK09wbow3XuVJKWMBaLwHaIG?rs=1&pid=ImgDetMain" alt="Party B" onclick="selectParty(this, 'Party B')">
+                    <h3>Congress</h3>
+                </div>
+                <div class="party">
+                    <img src="https://www.bing.com/th?id=OSK.0636b6f62386b8e45b83c270ae6112d7&pid=cdx&w=223&h=189&c=7" alt="Party C" onclick="selectParty(this, 'Party C')">
+                    <h3>NOTA C</h3>
+                </div>
             </div>
-            <div class="party">
-                <img src="https://th.bing.com/th/id/OIP.pKQK09wbow3XuVJKWMBaLwHaIG?rs=1&pid=ImgDetMain" alt="Congress">
-                <h3>CONGRESS</h3>
-            </div>
-            <div class="party">
-                <img src="https://www.bing.com/th?id=OSK.0636b6f62386b8e45b83c270ae6112d7&pid=cdx&w=223&h=189&c=7" alt="NOTA">
-                <h3>NOTA</h3>
-           
+            <input type="hidden" id="selectedParty" name="selectedParty">
+            <button type="submit">Vote</button>
+        </form>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const aadhar = localStorage.getItem("userAadhar");
+            const name = localStorage.getItem("userName");
+            
+            if (!aadhar || !name) {
+                alert("Please login first to access the voting page.");
+                window.location.href = "index.html";
+            }
+
+            document.getElementById("aadhar").value = aadhar;
+            document.getElementById("name").value = name;
+        });
+
+        function selectParty(img, partyName) {
+            const parties = document.querySelectorAll('.party img');
+            parties.forEach(party => party.classList.remove('selected'));
+            img.classList.add('selected');
+            document.getElementById('selectedParty').value = partyName;
+        }
+
+        document.getElementById('votingForm').onsubmit = function(e) {
+            e.preventDefault();
+            const selectedParty = document.getElementById('selectedParty').value;
+            if (!selectedParty) {
+                alert("Please select a party before voting.");
+                return;
+            }
+            alert("Your response has been recorded. Redirecting to home page.");
+            localStorage.removeItem("userAadhar");
+            localStorage.removeItem("userName");
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
