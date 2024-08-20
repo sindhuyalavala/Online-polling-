@@ -8,7 +8,221 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
+            padding: 0;<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Polling System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
             padding: 0;
+            background-color: #f0f0f0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        nav {
+            background-color: #444;
+            padding: 0.5rem;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav ul li {
+            margin: 0 1rem;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        .login-btn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .parties {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .party {
+            text-align: center;
+            margin: 1rem;
+        }
+        .party img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Online Polling System</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#" id="voteLink">Vote</a></li>
+            <li><a href="#" id="resultsLink">Results</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#" id="loginBtn" class="login-btn">Login</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h2>Top Parties Participating in Elections</h2>
+        <div class="parties">
+            <div class="party">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Bharatiya_Janata_Party_logo.svg/1024px-Bharatiya_Janata_Party_logo.svg.png">
+                <h3>BJP</h3>
+            </div>
+            <div class="party">
+                <img src="https://th.bing.com/th/id/OIP.pKQK09wbow3XuVJKWMBaLwHaIG?rs=1&pid=ImgDetMain" alt="Party 2">
+                <h3>CONGRESS</h3>
+            </div>
+            <div class="party">
+                <img src="https://www.bing.com/th?id=OSK.0636b6f62386b8e45b83c270ae6112d7&pid=cdx&w=223&h=189&c=7" alt="Party 3">
+                <h3>NOTA</h3>
+            </div>
+        </div>
+        <h2>Important Information</h2>
+        <p>Welcome to our online polling system. Here you can find information about upcoming elections, participating parties, and cast your vote securely.</p>
+        <ul>
+            <li>Voting opens on: [12-10-2024]</li>
+            <li>Voting closes on: [13-10-2024]</li>
+            <li>Results will be announced on: [20-10-2024]</li>
+        </ul>
+        <p>Please ensure you have registered to vote and have your voter ID ready before the voting period begins.</p>
+    </main>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Login</h2>
+            <form id="loginForm">
+                <label for="aadhar">Aadhar Number:</label>
+                <input type="text" id="aadhar" name="aadhar" required><br><br>
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br><br>
+                <input type="submit" value="Login">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const loginBtn = document.getElementById("loginBtn");
+        const loginModal = document.getElementById("loginModal");
+        const closeBtn = document.getElementsByClassName("close")[0];
+        const loginForm = document.getElementById("loginForm");
+        const voteLink = document.getElementById("voteLink");
+        const resultsLink = document.getElementById("resultsLink");
+
+        const resultsDate = new Date("2024-10-20"); // Set the results date here
+        const currentDate = new Date();
+
+        loginBtn.onclick = function() {
+            loginModal.style.display = "block";
+        }
+
+        closeBtn.onclick = function() {
+            loginModal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == loginModal) {
+                loginModal.style.display = "none";
+            }
+        }
+
+        loginForm.onsubmit = function(e) {
+            e.preventDefault();
+            const aadhar = document.getElementById("aadhar").value;
+            const name = document.getElementById("name").value;
+            localStorage.setItem("userAadhar", aadhar);
+            localStorage.setItem("userName", name);
+            loginModal.style.display = "none";
+            loginBtn.textContent = "Logged In";
+            loginBtn.style.backgroundColor = "#008CBA";
+        }
+
+        voteLink.onclick = function(e) {
+            e.preventDefault();
+            if (localStorage.getItem("userAadhar") && localStorage.getItem("userName")) {
+                window.location.href = "voting.html";
+            } else {
+                alert("Please login first to access the voting page.");
+            }
+        }
+
+        resultsLink.onclick = function(e) {
+            e.preventDefault();
+            if (currentDate < resultsDate) {
+                alert(`Sorry, please wait until ${resultsDate.toDateString()} to view the results.`);
+            } else {
+                window.location.href = "results.html"; // Assuming results.html is the page that shows the results
+            }
+        }
+    </script>
+</body>
+</html>
+
             background-color: #f0f0f0;
         }
         header {
